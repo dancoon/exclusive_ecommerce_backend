@@ -155,19 +155,15 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 SITE_ID = 1
 
 # CORS
-if DEBUG:
-    CORS_ORIGIN_ALLOW_ALL = True
-else:
-    CORS_ALLOWED_ORIGINS = config(
-        "CORS_ALLOWED_ORIGINS", default="https://example.com", cast=Csv()
+CORS_ALLOWED_ORIGINS = config(
+        "CORS_ALLOWED_ORIGINS", default="http://localhost:3000, http://127.0.0.1:3000", cast=Csv()
     )
-
+CORS_ALLOW_CREDENTIALS = True
 # Rest framework settings
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        "accounts.authentication.CustomJWTAuthentication",
     ),
 }
 
@@ -179,6 +175,8 @@ AUTHENTICATION_BACKENDS = [
 # Djoser settings
 DJOSER = {
     # Add Djoser settings here
+    "HIDE_USERS": True,
+    "TOKEN_MODEL": None,
     # User Create settings
     "USER_CREATE_PASSWORD_RETYPE": True,
     "ACTIVATION_URL": "auth/activate/{uid}/{token}",
@@ -191,8 +189,21 @@ DJOSER = {
     "EMAIL": {
         "password_reset": "accounts.emails.PasswordResetEmail",
         "password_changed_confirmation": "accounts.emails.PasswordChangedConfirmationEmail",
+        "username_reset": "accounts.emails.UsernameResetEmail",
+        "username_changed_confirmation": "accounts.emails.UsernameChangedConfirmationEmail",
+
     },
 }
+
+# Authentication Cookie
+AUTH_COOKIE = "access"
+AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 5
+AUTH_COOKIE_REFRESH = "refresh"
+AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24
+AUTH_COOKIE_SECURE = config("AUTH_COOKIE_SECURE", default=False, cast=bool)
+AUTH_COOKIE_HTTP_ONLY = True
+AUTH_COOKIE_PATH = "/"
+AUTH_COOKIE_SAMESITE = "None"
 
 # Email settings
 if DEBUG:
@@ -205,7 +216,7 @@ EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="your_email_address")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="your_password")
-DEFAULT_FROM_EMAIL = "DevTube"
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", "email account")
 
 # Frontend URLs
 FRONT_END_URLS = {}
