@@ -179,7 +179,7 @@ DJOSER = {
     "TOKEN_MODEL": None,
     # User Create settings
     "USER_CREATE_PASSWORD_RETYPE": True,
-    "ACTIVATION_URL": "auth/activate/{uid}/{token}",
+    "ACTIVATION_URL": "activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SEND_CONFIRMATION_EMAIL": True,
     # Password reset settings
