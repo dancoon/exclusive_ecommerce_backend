@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "djoser",
     # Custom Apps
     "accounts.apps.AccountsConfig",
+    "products.apps.ProductsConfig",
 ]
 
 
@@ -207,7 +208,8 @@ AUTH_COOKIE_SAMESITE = "None"
 
 # Email settings
 if DEBUG:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
